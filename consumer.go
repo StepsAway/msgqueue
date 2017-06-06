@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/bsm/sarama-cluster"
 	"log"
+	"github.com/Shopify/sarama"
 )
 
 // SetupConsumer initializes a new consumer
@@ -12,6 +13,14 @@ func (k *Kafka) SetupConsumer() *KafkaConsumer {
 	config := cluster.NewConfig()
 	config.Consumer.Return.Errors = true
 	config.Group.Return.Notifications = true
+
+	// Set offset
+	if k.OffsetInitial == "OffsetOldest" {
+		config.Consumer.Offsets.Initial = sarama.OffsetOldest
+	} else {
+		config.Consumer.Offsets.Initial = sarama.OffsetNewest
+	}
+
 	// init consumer
 	consumer, err := cluster.NewConsumer(k.Brokers, k.ConsumerGroup, k.ConsumerTopics, config)
 	if err != nil {

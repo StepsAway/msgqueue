@@ -10,6 +10,7 @@ type Kafka struct {
 	Brokers        []string
 	ConsumerTopics []string
 	ConsumerGroup  string
+	OffsetInitial  string
 }
 
 //KafkaConsumer is a sarama-cluster Consumer
